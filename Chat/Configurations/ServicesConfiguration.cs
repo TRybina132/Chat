@@ -1,5 +1,6 @@
 ﻿using Application.Services.ServicesConfiguration;
 using DataAccess.Repositories.Configuration;
+using WebAPI.Mappers.Configuration;
 
 namespace Chat.Configurations
 {
@@ -9,6 +10,7 @@ namespace Chat.Configurations
         {
             services.AddApplicationServices();
             services.AddCustomRepositories();
+            services.AddCustomMappers();
         }
     }
 }

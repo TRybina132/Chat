@@ -1,4 +1,5 @@
-﻿using DataAccess.Repositories.Configuration;
+﻿using Application.Services.ServicesConfiguration;
+using DataAccess.Repositories.Configuration;
 
 namespace Chat.Configurations
 {
@@ -6,6 +7,7 @@ namespace Chat.Configurations
     {
         public static void AddCustomServices(this IServiceCollection services)
         {
+            services.AddApplicationServices();
             services.AddCustomRepositories();
         }
     }

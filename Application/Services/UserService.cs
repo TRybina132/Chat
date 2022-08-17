@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Repositories;
+﻿using Core.Entities;
+using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 
 namespace Application.Services
@@ -11,5 +12,11 @@ namespace Application.Services
         {
             this.repository = repository;
         }
+
+        public async Task<IList<User>> GetAllUsersAsync() =>
+            await repository.GetAsync(asNoTracking: true);
+
+        public async Task<User> GetByIdAsync(int id) =>
+            await repository.GetById(id) ?? throw new Exception("User not found!");
     }
 }

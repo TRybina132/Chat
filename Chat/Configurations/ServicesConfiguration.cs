@@ -1,4 +1,6 @@
-﻿using Application.Services.ServicesConfiguration;
+﻿using Application.Handlers;
+using Application.Services.ServicesConfiguration;
+using Core.Interfaces.Handlers;
 using DataAccess.Repositories.Configuration;
 using WebAPI.Mappers.Configuration;
 
@@ -11,6 +13,8 @@ namespace Chat.Configurations
             services.AddApplicationServices();
             services.AddCustomRepositories();
             services.AddCustomMappers();
+
+            services.AddScoped<IJwtHandler, JwtHandler>();
         }
     }
 }

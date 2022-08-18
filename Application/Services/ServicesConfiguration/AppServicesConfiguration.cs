@@ -8,6 +8,7 @@ namespace Application.Services.ServicesConfiguration
         public static void AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
         }
     }
 }

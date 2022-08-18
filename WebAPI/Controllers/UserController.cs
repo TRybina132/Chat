@@ -2,11 +2,13 @@
 using Core.Interfaces.Mappers;
 using Core.Interfaces.Services;
 using Core.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
     [Route("api/user")]
+    [Authorize]
     [ApiController]
     public class UserController : ControllerBase 
     {
@@ -42,6 +44,14 @@ namespace WebAPI.Controllers
             UserViewModel result = userMapper.Map(user);
 
             return result;
+        }
+
+        [HttpGet("{username}")]
+        public async Task<UserViewModel> GetUserByName([FromRoute] string username)
+        {
+            User user = await service.GetByUsername(username);
+
+            return userMapper.Map(user);
         }
     }
 }

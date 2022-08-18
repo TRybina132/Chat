@@ -45,5 +45,13 @@ namespace WebAPI.Controllers
 
             return result;
         }
+
+        [HttpGet("{username}")]
+        public async Task<UserViewModel> GetUserByName([FromRoute] string username)
+        {
+            User user = await service.GetByUsername(username);
+
+            return userMapper.Map(user);
+        }
     }
 }

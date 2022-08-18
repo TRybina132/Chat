@@ -7,5 +7,7 @@ namespace Core.Interfaces.Services
         Task<IList<User>> GetAllUsersAsync();
 
         Task<User> GetByIdAsync(int id);
+
+        Task<User> GetByUsername(string username);
     }
 }

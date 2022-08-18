@@ -17,6 +17,14 @@ namespace Application.Services
             await repository.GetAsync(asNoTracking: true);
 
         public async Task<User> GetByIdAsync(int id) =>
-            await repository.GetById(id) ?? throw new Exception("User not found!");
+            await repository.GetById(id) ?? throw new Exception($"User with id: {id} not found!");
+
+        public async Task<User> GetByUsername(string username)
+        {
+            var result = await repository.GetAsync(filter: user => user.UserName == username, take: 1);
+            User? user = result.FirstOrDefault();
+
+            return user ?? throw new Exception($"User: {username} not found!");
+        }
     }
 }

@@ -2,11 +2,13 @@
 using Core.Interfaces.Mappers;
 using Core.Interfaces.Services;
 using Core.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
     [Route("api/user")]
+    [Authorize]
     [ApiController]
     public class UserController : ControllerBase 
     {

@@ -6,7 +6,7 @@ namespace Core.Interfaces.Services
 {
     public interface IAuthService
     {
-        Task<string> Login(LoginViewModel user);
+        Task<LoginResponse> Login(LoginViewModel user);
 
     }
 }

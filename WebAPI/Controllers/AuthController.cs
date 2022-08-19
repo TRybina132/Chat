@@ -18,7 +18,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("/login")]
-        public async Task<string> LoginAsync([FromBody] LoginViewModel credentials) =>
+        public async Task<LoginResponse> LoginAsync([FromBody] LoginViewModel credentials) =>
             await authService.Login(credentials);
     }
 }

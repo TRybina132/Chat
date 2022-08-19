@@ -18,12 +18,16 @@ namespace Application.Services
             userManager = manager;
         }
 
-        public async Task<string> Login(LoginViewModel login)
+        public async Task<LoginResponse> Login(LoginViewModel login)
         {
             var user = await userManager.FindByNameAsync(login.Username);
 
             if (user == null || !await userManager.CheckPasswordAsync(user, login.Password))
-                return "";
+                return new LoginResponse 
+                    { 
+                        ErrorMessage = "Username or password are incorrect!",
+                        IsSuccessful = false
+                    };
 
             var signingCredentials = jwtHandler.GetSigningCredentials();
 
@@ -33,7 +37,11 @@ namespace Application.Services
 
             var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-            return token;
+            return new LoginResponse
+            {
+                IsSuccessful = true,
+                Token = token
+            };
         }
     }
 }

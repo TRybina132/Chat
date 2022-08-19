@@ -2,6 +2,7 @@ using Chat.Configurations;
 using Core.Entities;
 using DataAccess.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCustomServices();
+builder.Services.AddCors(builder.Configuration.GetSection("CORSConfig"));
 
 builder.Services.AddDbContext<ChatContext>(options =>
      options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -32,6 +34,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(builder.Configuration.GetSection("CORSConfig")["Name"]);
 
 app.UseAuthentication();
 app.UseAuthorization();

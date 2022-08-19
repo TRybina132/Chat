@@ -46,7 +46,7 @@ namespace WebAPI.Controllers
             return result;
         }
 
-        [HttpGet("{username}")]
+        [HttpGet("withUsername/{username}")]
         public async Task<UserViewModel> GetUserByName([FromRoute] string username)
         {
             User user = await service.GetByUsername(username);

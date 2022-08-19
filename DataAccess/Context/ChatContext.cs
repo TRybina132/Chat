@@ -23,6 +23,5 @@ namespace DataAccess.Context
 
             builder.SeedUsers();
         }
-
     }
 }

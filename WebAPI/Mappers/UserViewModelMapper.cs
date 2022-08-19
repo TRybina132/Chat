@@ -6,13 +6,26 @@ namespace WebAPI.Mappers
 {
     public class UserViewModelMapper : IMapper<User, UserViewModel>
     {
-        public UserViewModel Map(User entity) =>
-            new UserViewModel()
+        private readonly IMapper<IEnumerable<Chat>, IEnumerable<ChatViewModel>> chatsMapper;
+
+        public UserViewModel Map(User entity)
+        {
+            var chats = entity.UserChats.Select(uc => uc.Chat);
+
+            var chatsViewModels = chats != null ?
+                chatsMapper.Map(chats) :
+                new List<ChatViewModel>();
+
+            var viewModel = new UserViewModel()
             {
                 Id = entity.Id,
                 UserName = entity.UserName,
                 FirstName = entity.FirstName,
-                LastName = entity.LastName
+                LastName = entity.LastName,
+                Chats = chatsViewModels
             };
+
+            return viewModel;
+        }
     }
 }

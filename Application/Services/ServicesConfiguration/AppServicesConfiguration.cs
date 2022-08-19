@@ -9,6 +9,7 @@ namespace Application.Services.ServicesConfiguration
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IChatService, ChatService>();
         }
     }
 }

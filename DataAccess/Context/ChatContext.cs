@@ -9,6 +9,10 @@ namespace DataAccess.Context
 {
     public class ChatContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<UserChat> UserChats { get; set; }
+        public DbSet<Message> Messages { get; set; }
+
         public ChatContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)

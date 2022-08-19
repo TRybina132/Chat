@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Core.Entities
 {
@@ -9,5 +8,7 @@ namespace Core.Entities
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public IEnumerable<UserChat>? UserChats { get; set; }
+        public IEnumerable<Message>? Messages { get; set; }
     }
 }

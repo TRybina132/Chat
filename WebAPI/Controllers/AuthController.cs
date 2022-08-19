@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
             this.authService = authService;
         }
 
-        [HttpPost("/login")]
+        [HttpPost("login")]
         public async Task<LoginResponse> LoginAsync([FromBody] LoginViewModel credentials) =>
             await authService.Login(credentials);
     }

@@ -8,14 +8,14 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(x => x.Id);
+            builder.HasKey(user => user.Id);
 
             builder
-               .Property(u => u.FirstName)
+               .Property(user => user.FirstName)
                .HasMaxLength(50);
 
             builder
-                .Property(u => u.LastName)
+                .Property(user => user.LastName)
                 .HasMaxLength(50);
         }
     }

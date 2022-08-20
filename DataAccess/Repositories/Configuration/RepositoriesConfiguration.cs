@@ -13,6 +13,7 @@ namespace DataAccess.Repositories.Configuration
         public static void AddCustomRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IChatRepository, ChatRepository>();
         }
     }
 }

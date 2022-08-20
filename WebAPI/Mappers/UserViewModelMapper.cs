@@ -19,7 +19,7 @@ namespace WebAPI.Mappers
             var viewModel = new UserViewModel()
             {
                 Id = entity.Id,
-                UserName = entity.UserName,
+                Username = entity.UserName,
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
                 Chats = chatsViewModels

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers
 {
     [Route("api/chat")]
-    [Authorize]
     [ApiController]
     public class ChatController : ControllerBase
     {
@@ -29,6 +28,7 @@ namespace WebAPI.Controllers
             this.chatCreateMapper = chatCreateMapper;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<List<ChatViewModel>> GetAllChats()
         {

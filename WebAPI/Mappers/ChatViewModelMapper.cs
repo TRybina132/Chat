@@ -28,7 +28,8 @@ namespace WebAPI.Mappers
             {
                 Id = entity.Id,
                 Name = entity.Name,
-                Users = usersViewModels
+                Users = usersViewModels,
+                Type= entity.Type
             };
 
             return viewModel;

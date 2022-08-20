@@ -1,6 +1,7 @@
 ﻿using Core.Entities;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
@@ -14,7 +15,10 @@ namespace Application.Services
         }
 
         public async Task<IList<User>> GetAllUsersAsync() =>
-            await repository.GetAsync(asNoTracking: true);
+            await repository.GetAsync(
+                asNoTracking: true,
+                include: query => query.Include(user => user.UserChats)
+                    .ThenInclude(uc => uc.Chat));
 
         public async Task<User> GetByIdAsync(int id) =>
             await repository.GetById(id) ?? throw new Exception($"User with id: {id} not found!");

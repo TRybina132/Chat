@@ -1,3 +1,4 @@
+using Application.Hubs;
 using Chat.Configurations;
 using Core.Entities;
 using DataAccess.Context;
@@ -46,6 +47,8 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddCustomServices();
 builder.Services.AddCors(builder.Configuration.GetSection("CORSConfig"));
 
+builder.Services.AddSignalR();
+
 builder.Services.AddDbContext<ChatContext>(options =>
      options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -74,5 +77,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<ChatHub>("/chat");
 
 app.Run();

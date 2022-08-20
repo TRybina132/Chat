@@ -14,6 +14,7 @@ namespace DataAccess.Repositories.Configuration
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IChatRepository, ChatRepository>();
+            services.AddScoped<IUserChatRepository, UserChatRepository>();
         }
     }
 }

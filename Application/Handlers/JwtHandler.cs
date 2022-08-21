@@ -38,7 +38,8 @@ namespace Application.Handlers
         public List<Claim> GetClaims(IdentityUser<int> user) =>
             new List<Claim>
             {
-                new Claim("username", user.UserName)
+                new Claim("username", user.UserName),
+                new Claim("id", user.Id.ToString())
             };
 
         public SigningCredentials GetSigningCredentials()

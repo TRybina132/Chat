@@ -51,13 +51,16 @@ namespace WebAPI.Controllers
         [HttpPost("sendToChat")]
         public async Task SendMessageToChat([FromBody] MessageCreateViewModel message)
         {
-            string username = User.FindFirstValue("username");
-
-            var user = await userService.GetByUsername(username);
             Message mappedMessage = messageCreateMapper.Map(message);
 
             await messageService.AddMessage(mappedMessage);
             await hubContext.Clients.Group(message.ChatName).SendAsync("receive", message);
+        }
+
+        [HttpPost("sendToUser")]
+        public async Task SendMessageToUser([FromBody] MessageCreateViewModel message)
+        {
+            
         }
     }
 }

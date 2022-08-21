@@ -15,8 +15,11 @@ namespace WebAPI.Mappers
 
         public IEnumerable<UserViewModel> Map(IEnumerable<User> users)
         {
-            foreach (var user in users)
-                yield return mapper.Map(user);       
+            if (users != null)
+            {
+                foreach (var user in users)
+                    yield return mapper.Map(user);
+            }
         }
     }
 }

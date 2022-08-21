@@ -17,7 +17,7 @@ namespace WebAPI.Mappers
         public ChatViewModel Map(Chat entity)
         {
             var users = 
-                entity.UserChats?.Select(uc => uc.User);
+                entity.UserChats?.Select(uc => uc.User).ToList();
 
             IEnumerable<UserViewModel> usersViewModels = 
                 users != null ?

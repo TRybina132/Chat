@@ -1,11 +1,9 @@
+using Application.Hubs;
 using Chat.Configurations;
 using Core.Entities;
 using DataAccess.Context;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,6 +44,8 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddCustomServices();
 builder.Services.AddCors(builder.Configuration.GetSection("CORSConfig"));
 
+builder.Services.AddSignalR();
+
 builder.Services.AddDbContext<ChatContext>(options =>
      options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -73,6 +73,11 @@ app.UseCors(builder.Configuration.GetSection("CORSConfig")["Name"]);
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+
+    endpoints.MapHub<MessageHub>("/hubs/messages");
+});
 
 app.Run();

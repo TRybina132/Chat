@@ -9,10 +9,14 @@ namespace Application.Services
     public class ChatService : IChatService
     {
         private readonly IChatRepository repository;
+        private readonly IUserChatRepository userChatRepository;
 
-        public ChatService(IChatRepository repository)
+        public ChatService(
+            IChatRepository repository,
+            IUserChatRepository userChatRepository)
         {
             this.repository = repository;
+            this.userChatRepository = userChatRepository;
         }
 
         public async Task<IList<Chat>> GetAllChatsAsync() =>
@@ -33,6 +37,25 @@ namespace Application.Services
         {
             await repository.InsertAsync(chat);
             await repository.SaveChangesAsync();
+        }
+
+        public async Task AddUserToChatAsync(UserChat userChat)
+        {
+            var isExists = await userChatRepository.IsAlreadyExists(userChat);
+            if (!isExists)
+            {
+                await userChatRepository.InsertAsync(userChat);
+                await userChatRepository.SaveChangesAsync();
+            }
+        }
+
+        public async Task RemoveUserFromChat(UserChat userChat)
+        {
+            if(await userChatRepository.IsAlreadyExists(userChat))
+            {
+                userChatRepository.Delete(userChat);
+                await userChatRepository.SaveChangesAsync();
+            }
         }
     }
 }

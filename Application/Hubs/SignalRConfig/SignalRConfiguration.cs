@@ -14,7 +14,7 @@ namespace Application.Hubs.SignalRConfig
 
                     var path = context.HttpContext.Request.Path;
                     if (!string.IsNullOrEmpty(accessToken) &&
-                        (path.StartsWithSegments("/chat")))
+                        (path.StartsWithSegments("/hubs/messages")))
                     {
                         context.Token = accessToken;
                     }

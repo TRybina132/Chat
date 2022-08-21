@@ -76,8 +76,11 @@ app.UseCors(builder.Configuration.GetSection("CORSConfig")["Name"]);
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
 
-app.MapHub<ChatHub>("/chat");
+    endpoints.MapHub<MessageHub>("/hubs/messages");
+});
 
 app.Run();

@@ -31,8 +31,6 @@ namespace Chat.Configurations
                     policy =>
                     {
                         policy.WithOrigins(corsConfig["Origin"]);
-                        policy.WithHeaders(corsConfig["Headers"]);
-                        policy.WithMethods(corsConfig["Methods"]);
                         policy.AllowCredentials();
                         policy.AllowAnyHeader();
                         policy.AllowAnyMethod();

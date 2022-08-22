@@ -22,14 +22,16 @@ namespace Application.Services
         public async Task<IList<Chat>> GetAllChatsAsync() =>
             await repository.GetAsync(
                 asNoTracking: true,
-                include: query => 
+                include: query =>
                     query.Include(chat => chat.UserChats)
-                        .ThenInclude(uc => uc.User)
-                    .Include(chat => chat.Messages));
+                        .ThenInclude(uc => uc.User));
 
         public async Task<Chat> GetChatById(int id)
         {
-            Chat? chat = await repository.GetById(id);
+            Chat? chat = await repository.GetById(id,
+                include: query =>
+                    query.Include(chat => chat.UserChats)
+                        .ThenInclude(uc => uc.User));
             return chat ?? throw new Exception($"Chat with id:{id} not found");
         }
 
@@ -51,11 +53,19 @@ namespace Application.Services
 
         public async Task RemoveUserFromChat(UserChat userChat)
         {
-            if(await userChatRepository.IsAlreadyExists(userChat))
+            if (await userChatRepository.IsAlreadyExists(userChat))
             {
                 userChatRepository.Delete(userChat);
                 await userChatRepository.SaveChangesAsync();
             }
+        }
+
+        public async Task<IList<Chat>> GetChatsForUser(int userId)
+        {
+            var result = await userChatRepository.GetUserChats(userId);
+            if (result == null)
+                throw new Exception($"There no chats for user: {userId}");
+            return result;
         }
     }
 }

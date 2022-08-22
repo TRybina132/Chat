@@ -7,23 +7,26 @@ namespace WebAPI.Mappers
     public class MessageViewModelMapper : IMapper<Message, MessageViewModel>
     {
         private readonly IMapper<User, UserViewModel> userMapper;
-        //private readonly IMapper<Chat, ChatViewModel> chatMapper;
-
+        
         public MessageViewModelMapper(
-            IMapper<User, UserViewModel> userMapper)
+            IMapper<User, UserViewModel> userMapper, IMapper<Chat, ChatViewModel> chatMapper)
         {
             this.userMapper = userMapper;
-            //this.chatMapper = chatMapper;
         }
 
-        public MessageViewModel Map(Message entity) =>
-            new MessageViewModel
+        public MessageViewModel Map(Message entity)
+        {
+            var viewModel = new MessageViewModel
             {
                 Id = entity.Id,
                 Text = entity.Text,
                 SentAt = entity.SentAt,
-                //Chat = chatMapper.Map(entity.Chat),
-                Sender = userMapper.Map(entity.Sender)
+                SenderName = entity.Sender?.UserName,
+                ChatId = entity.Chat.Id,
             };
+
+            return viewModel;
+
+        }
     }
 }

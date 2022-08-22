@@ -9,5 +9,6 @@ namespace Core.Interfaces.Services
         Task AddChatAsync(Chat chat);
         Task AddUserToChatAsync(UserChat userChat);
         Task RemoveUserFromChat(UserChat userChat);
+        Task<IList<Chat>> GetChatsForUser(int userId);
     }
 }

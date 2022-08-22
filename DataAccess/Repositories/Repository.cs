@@ -23,7 +23,8 @@ namespace DataAccess.Repositories
             Expression<Func<T, bool>>? filter = null, 
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, 
             bool asNoTracking = false, 
-            int? take = null, int skip = 0)
+            int? take = null, int skip = 0,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
         {
             IQueryable<T> query = filter == null ? 
                 dbSet : dbSet.Where(filter);
@@ -34,6 +35,9 @@ namespace DataAccess.Repositories
 
             if (asNoTracking)
                 query = query.AsNoTracking();
+
+            if(orderBy != null)
+                query = orderBy(query);
 
             query = query.Skip(skip);
 

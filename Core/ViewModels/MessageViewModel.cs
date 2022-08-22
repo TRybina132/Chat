@@ -4,8 +4,9 @@
     {
         public int Id { get; set; }
         public string Text { get; set; }
+        public string SenderName { get; set; }
         public DateTime SentAt { get; set; }
-        public ChatViewModel? Chat { get; set; }
+        public int ChatId { get; set; }
         public UserViewModel? Sender { get; set; }
     }
 }

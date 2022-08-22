@@ -9,7 +9,8 @@ namespace Core.Interfaces.Repositories
             Expression<Func<T, bool>>? filter = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
             bool asNoTracking = false,
-            int? take = null, int skip = 0);
+            int? take = null, int skip = 0,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null);
 
         ValueTask<T?> GetById(
             int id,

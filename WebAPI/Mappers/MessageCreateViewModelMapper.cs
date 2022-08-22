@@ -12,7 +12,7 @@ namespace WebAPI.Mappers
                 ChatId = entity.ChatId,
                 SenderId = entity.SenderId,
                 Text = entity.Text,
-                SentAt = entity.SentAt
+                SentAt = entity.SentAt.ToLocalTime()
             };
     }
 }

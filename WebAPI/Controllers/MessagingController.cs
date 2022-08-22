@@ -20,22 +20,23 @@ namespace WebAPI.Controllers
         private readonly IChatService chatService;
         private readonly IUserService userService;
         private readonly IHubContext<MessageHub> hubContext;
-        private readonly IMapper<IEnumerable<Message>, IEnumerable<MessageViewModel>>enumMessageMapper;
         private readonly IMapper<MessageCreateViewModel, Message> messageCreateMapper;
+        private readonly IMapper<Message, MessageViewModel> messageMapper;
 
         public MessagingController(
             IMessageService messageService,
             IChatService chatService,
             IHubContext<MessageHub> hubContext,
-            IMapper<IEnumerable<Message>, IEnumerable<MessageViewModel>> enumMessageMapper, IMapper<MessageCreateViewModel, Message> messageCreateMapper,
+            IMapper<MessageCreateViewModel, Message> messageCreateMapper,
+            IMapper<Message, MessageViewModel> messageMapper,
             IUserService userService)
         {
             this.messageService = messageService;
             this.chatService = chatService;
             this.hubContext = hubContext;
-            this.enumMessageMapper = enumMessageMapper;
             this.messageCreateMapper = messageCreateMapper;
-            this.userService = userService; 
+            this.userService = userService;
+            this.messageMapper = messageMapper;
         }
 
         [HttpPost("joinChat")]
@@ -53,8 +54,17 @@ namespace WebAPI.Controllers
         {
             Message mappedMessage = messageCreateMapper.Map(message);
 
-            await messageService.AddMessage(mappedMessage);
-            await hubContext.Clients.Group(message.ChatName).SendAsync("receive", message);
+            Message createdMessage = await messageService.AddMessage(mappedMessage);
+            MessageViewModel createdMessageViewModel = messageMapper.Map(createdMessage);
+
+            createdMessageViewModel.SenderName = User.FindFirstValue("username");
+            await hubContext.Clients.Group(message.ChatName).SendAsync("receive", createdMessageViewModel);
+        }
+
+        [HttpDelete("deleteMessage/{id}")]
+        public async Task DeleteMessage([FromRoute] int id)
+        {
+
         }
 
         [HttpPost("sendToUser")]

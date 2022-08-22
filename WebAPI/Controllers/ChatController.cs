@@ -9,6 +9,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/chat")]
     [ApiController]
+    [Authorize]
     public class ChatController : ControllerBase
     {
         private readonly IChatService service;
@@ -28,7 +29,6 @@ namespace WebAPI.Controllers
             this.chatCreateMapper = chatCreateMapper;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<List<ChatViewModel>> GetAllChats()
         {
@@ -43,6 +43,13 @@ namespace WebAPI.Controllers
             Chat chat = await service.GetChatById(id);
             
             return chatMapper.Map(chat);
+        }
+
+        [HttpGet("forUser{userId}")]
+        public async Task<IEnumerable<ChatViewModel>> GetChatsForUser([FromRoute] int userId)
+        {
+            var chats = await service.GetChatsForUser(userId);
+            return chatsMapper.Map(chats);
         }
 
         [HttpPost]

@@ -14,12 +14,14 @@ namespace Application.Services
             this.repository = repository;
         }
 
-        public async Task<IList<Message>> GetMessagesForChat(int chatId)
+        public async Task<IList<Message>> GetMessagesForChat(int chatId, int skip, int take)
         {
             var result =
                 await repository.GetAsync(
                     filter: message => message.ChatId == chatId,
                     asNoTracking: true,
+                    skip: skip,
+                    take: take,
                     include: query => query.Include(m => m.Sender));
 
             return result;

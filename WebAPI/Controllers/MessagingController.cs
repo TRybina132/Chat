@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
         [HttpPost("sendToUser")]
         public async Task SendMessageToUser([FromBody] MessageCreateViewModel message)
         {
-            
+                
         }
     }
 }

@@ -19,6 +19,7 @@ namespace WebAPI.Mappers.Configuration
             services.AddScoped<IMapper<Message,MessageViewModel>, MessageViewModelMapper>();
             services.AddScoped<IMapper<IEnumerable<Message>, IEnumerable<MessageViewModel>>,MessagesViewModelMapper>();
             services.AddScoped<IMapper<MessageCreateViewModel, Message>, MessageCreateViewModelMapper>();
+            services.AddScoped<IMapper<MessageViewModel, Message>, MessageMapper>();
         }
     }
 }

@@ -22,6 +22,7 @@ namespace WebAPI.Controllers
         private readonly IHubContext<MessageHub> hubContext;
         private readonly IMapper<MessageCreateViewModel, Message> messageCreateMapper;
         private readonly IMapper<Message, MessageViewModel> messageMapper;
+        private readonly IMapper<MessageViewModel, Message> messageViewModelMapper;
 
         public MessagingController(
             IMessageService messageService,
@@ -29,6 +30,7 @@ namespace WebAPI.Controllers
             IHubContext<MessageHub> hubContext,
             IMapper<MessageCreateViewModel, Message> messageCreateMapper,
             IMapper<Message, MessageViewModel> messageMapper,
+            IMapper<MessageViewModel, Message> messageViewModelMapper,
             IUserService userService)
         {
             this.messageService = messageService;
@@ -37,6 +39,7 @@ namespace WebAPI.Controllers
             this.messageCreateMapper = messageCreateMapper;
             this.userService = userService;
             this.messageMapper = messageMapper;
+            this.messageViewModelMapper = messageViewModelMapper;
         }
 
         [HttpPost("joinChat")]
@@ -61,10 +64,18 @@ namespace WebAPI.Controllers
             await hubContext.Clients.Group(message.ChatName).SendAsync("receive", createdMessageViewModel);
         }
 
-        [HttpDelete("deleteMessage/{id}")]
-        public async Task DeleteMessage([FromRoute] int id)
+        [HttpDelete("{messageId}")]
+        public async Task DeleteMessage([FromRoute] int messageId)
         {
+            var message = await messageService.DeleteMessage(messageId);
+            await hubContext.Clients.Group(message.Chat.Name).SendAsync("messageDeleted", message);
+        }
 
+        [HttpPut("{messageId}")]
+        public async Task UpdateMessage([FromRoute] int messageId, [FromBody] MessageViewModel updatedMessage)
+        {
+            var mappedMessage = messageViewModelMapper.Map(updatedMessage);
+            var message = await messageService.UpdateMessage(mappedMessage);
         }
 
         [HttpPost("sendToUser")]

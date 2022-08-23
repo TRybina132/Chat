@@ -14,6 +14,10 @@ namespace Application.Services
             this.repository = repository;
         }
 
+        public async Task<Message> GetMessageById(int messageId) =>
+                await repository.GetById(messageId, include: query => query.Include(m => m.Chat)) 
+                    ?? throw new Exception($"There no message with id: {messageId}");
+
         public async Task<IList<Message>> GetMessagesForChat(int chatId, int skip, int take)
         {
             var result =
@@ -36,22 +40,21 @@ namespace Application.Services
             return createdMessage;
         }
 
-        public async Task DeleteMessage(int messageId)
+        public async Task<Message> DeleteMessage(int messageId)
         {
-            Message? message = await repository.GetById(messageId);
-            if (message == null)
-                throw new Exception($"There no message with id: {messageId}");
-
+            var message = await GetMessageById(messageId);
             repository.Delete(message);
             await repository.SaveChangesAsync();
+            return message;
         }
 
-        public async Task UpdateMessage(Message updatedMessage)
+        public async Task<Message> UpdateMessage(Message updatedMessage)
         {
-            var message = await repository.GetById(updatedMessage.Id);
-            if (message == null)
-                throw new Exception($"There no message with id: {updatedMessage.Id}");
-
+            var message = await GetMessageById(updatedMessage.Id);
+            message.Text = updatedMessage.Text;
+            repository.Update(message);
+            await repository.SaveChangesAsync();
+            return message;
         }
     }
 }

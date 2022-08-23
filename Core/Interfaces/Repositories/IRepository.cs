@@ -16,12 +16,12 @@ namespace Core.Interfaces.Repositories
             int id,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null);
 
-        //ValueTask<T?> GetFirstOrDefaultAsync(
-        //    Expression<Func<T, bool>>? filter = null,
-        //    Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
-        //    bool asNoTracking = false);
+        Task<T?> GetFirstOrDefaultAsync(
+            Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+            bool asNoTracking = false);
 
-        Task InsertAsync(T entity);
+        Task<T> InsertAsync(T entity);
 
         void Update(T entity);
 

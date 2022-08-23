@@ -61,11 +61,27 @@ namespace DataAccess.Repositories
             return await set.FirstOrDefaultAsync(entity => entity == result);
         }
 
+        public async Task<T?> GetFirstOrDefaultAsync(
+            Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+            bool asNoTracking = false)
+        {
+            var query = await GetAsync(
+                filter: filter,
+                include: include,
+                asNoTracking: asNoTracking);
+
+            return query.FirstOrDefault();
+        }
+
         public void Delete(T entity) =>
             dbSet.Remove(entity);
 
-        public async Task InsertAsync(T entity) =>
-            await dbSet.AddAsync(entity);
+        public async Task<T> InsertAsync(T entity)
+        {
+            var createdEntity = await dbSet.AddAsync(entity);
+            return createdEntity.Entity;
+        }
 
         public void Update(T entity)
         {

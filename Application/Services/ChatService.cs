@@ -10,13 +10,16 @@ namespace Application.Services
     {
         private readonly IChatRepository repository;
         private readonly IUserChatRepository userChatRepository;
+        private readonly IUserService userService;
 
         public ChatService(
             IChatRepository repository,
-            IUserChatRepository userChatRepository)
+            IUserChatRepository userChatRepository,
+            IUserService userService)
         {
             this.repository = repository;
             this.userChatRepository = userChatRepository;
+            this.userService = userService;
         }
 
         public async Task<IList<Chat>> GetAllChatsAsync() =>
@@ -35,10 +38,11 @@ namespace Application.Services
             return chat ?? throw new Exception($"Chat with id:{id} not found");
         }
 
-        public async Task AddChatAsync(Chat chat)
+        public async Task<Chat> AddChatAsync(Chat chat)
         {
-            await repository.InsertAsync(chat);
+            var createdChat = await repository.InsertAsync(chat);
             await repository.SaveChangesAsync();
+            return createdChat;
         }
 
         public async Task AddUserToChatAsync(UserChat userChat)
@@ -66,6 +70,43 @@ namespace Application.Services
             if (result == null)
                 throw new Exception($"There no chats for user: {userId}");
             return result;
+        }
+
+        public async Task<Chat> GetPrivateChat(int senderId, int recipientId)
+        {
+            var (sender, recipient) = 
+                                (await userService.GetByIdAsync(senderId),
+                                 await userService.GetByIdAsync(recipientId));
+            if (sender is null)
+                throw new Exception($"User with id {senderId} does not exist");
+            if (recipient is null)
+                throw new Exception($"User with id {recipientId} does not exist");
+
+            var chat = await repository.GetFirstOrDefaultAsync(
+                include: query => 
+                    query.Include(chat => chat.UserChats)
+                    .ThenInclude(uc => uc.User),
+                filter: chat => 
+                    chat.UserChats.Select(uc => uc.UserId).Contains(senderId)
+                    && chat.UserChats.Select(ur => ur.UserId).Contains(recipientId)
+                    && chat.Type == ChatType.Private);
+
+            if(chat != null)
+                return chat;
+
+            Chat privateChat = new Chat()
+            {
+                Name = $"{sender.UserName} - {recipient.UserName}",
+                Type = ChatType.Private,
+                UserChats = new[]
+                {
+                    new UserChat { UserId = senderId },
+                    new UserChat { UserId = recipientId }
+                }
+            };
+
+            var createdChat = await AddChatAsync(privateChat);
+            return createdChat;
         }
     }
 }

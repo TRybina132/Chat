@@ -45,11 +45,29 @@ namespace WebAPI.Controllers
             return chatMapper.Map(chat);
         }
 
-        [HttpGet("forUser{userId}")]
+        [HttpGet("forUser/{userId}")]
         public async Task<IEnumerable<ChatViewModel>> GetChatsForUser([FromRoute] int userId)
         {
             var chats = await service.GetChatsForUser(userId);
             return chatsMapper.Map(chats);
+        }
+
+        [HttpGet("privateChat/{senderId}/{receiverId}")]
+        public async Task<ChatViewModel> GetPrivateChat([FromRoute]int senderId, [FromRoute]int receiverId)
+        {
+            Chat chat = await service.GetPrivateChat(senderId, receiverId);
+            return chatMapper.Map(chat);
+        }
+
+        [HttpPost("addUserToChat")]
+        public async Task AddUserToChat([FromBody] int chatId)
+        {
+            UserChat userChat = new UserChat
+            {
+                ChatId = chatId,
+                UserId = Convert.ToInt32(User?.FindFirst("id")?.Value)
+            };
+            await service.AddUserToChatAsync(userChat);
         }
 
         [HttpPost]

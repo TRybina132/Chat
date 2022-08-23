@@ -14,8 +14,10 @@ namespace DataAccess.Repositories
 
         public async Task<IList<Chat?>> GetUserChats(int userId)
         {
-            IQueryable<Chat?> chats = dbSet.Where(uc => uc.UserId == userId)
+            IQueryable<Chat?> chats = dbSet
+                .Where(uc => uc.UserId == userId)
                 .Select(uc => uc.Chat);
+
 
             var usersChats = await chats.ToListAsync();
             return usersChats;

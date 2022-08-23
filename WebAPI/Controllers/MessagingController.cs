@@ -78,16 +78,19 @@ namespace WebAPI.Controllers
             var message = await messageService.UpdateMessage(mappedMessage);
         }
 
-        [HttpPost("sendPrivateMessage")]
-        public async Task SendMessageToUser([FromBody] MessageCreateViewModel message)
-        {
-            Chat chat = await chatService.GetPrivateChat(message.SenderId, message.RecipientId);
+        //[HttpPost("sendPrivateMessage")]
+        //public async Task SendMessageToUser([FromBody] MessageCreateViewModel message)
+        //{
+        //    Chat chat = await chatService.GetPrivateChat(message.SenderId, message.RecipientId);
 
-            Message mappedMessage = messageCreateMapper.Map(message);
-            var messageViewModel = messageMapper.Map(mappedMessage);
+        //    Message mappedMessage = messageCreateMapper.Map(message);
+        //    var messageViewModel = messageMapper.Map(mappedMessage);
 
-            await hubContext.Clients.User(message.RecipientId.ToString())
-                .SendAsync("receive",messageViewModel);
-        }
+        //    messageViewModel.ChatId = chat.Id;
+
+        //    await hubContext.Clients.User(message.RecipientId.ToString())
+        //        .SendAsync("receive",messageViewModel);
+        //}
+
     }
 }

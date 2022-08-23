@@ -22,6 +22,7 @@ namespace DataAccess.Context
             builder.ApplyConfigurationsFromAssembly(typeof(UserConfiguration).Assembly);
 
             builder.SeedUsers();
+            builder.SeedChats();
         }
     }
 }

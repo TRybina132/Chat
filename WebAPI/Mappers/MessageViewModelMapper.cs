@@ -23,6 +23,7 @@ namespace WebAPI.Mappers
                 SentAt = entity.SentAt,
                 SenderName = entity.Sender?.UserName,
                 ChatId = entity.Chat.Id,
+                SenderId = entity.SenderId
             };
 
             return viewModel;

@@ -25,6 +25,7 @@ namespace Application.Services
         public async Task<IList<Chat>> GetAllChatsAsync() =>
             await repository.GetAsync(
                 asNoTracking: true,
+                filter: chat => chat.Type == ChatType.Group,
                 include: query =>
                     query.Include(chat => chat.UserChats)
                         .ThenInclude(uc => uc.User));

@@ -21,6 +21,7 @@ namespace Application.Handlers
             jwtSettings = configuration.GetSection("JWTConfig");
         }
 
+
         public JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> userClaims)
         {
             var lifetime = DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["LifetimeInMinutes"]));
@@ -43,6 +44,7 @@ namespace Application.Handlers
                 new Claim("id", user.Id.ToString())
             };
 
+        //  ᓚᘏᗢ Just extracts secretkey and hasing it 
         public SigningCredentials GetSigningCredentials()
         {
             var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);

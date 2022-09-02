@@ -12,9 +12,14 @@ namespace Application.Services
     {
         private readonly IJwtHandler jwtHandler;
         private readonly UserManager<User> userManager;
+        private readonly IUserService userService;
 
-        public AuthService(UserManager<User> manager, IJwtHandler jwtHandler)
+        public AuthService(
+            UserManager<User> manager,
+            IJwtHandler jwtHandler,
+            IUserService userService)
         {
+            this.userService = userService;
             this.jwtHandler = jwtHandler;
             userManager = manager;
         }
@@ -39,11 +44,43 @@ namespace Application.Services
             var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
             var refreshToken = jwtHandler.GenerateRefreshToken();
 
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(4);
+
+            //  POTENTIAL BUG! MAY NOT ALTER DATA in DB
+            await userManager.UpdateAsync(user);
+
             return new LoginResponse
             {
                 IsSuccessful = true,
                 Token = token,
                 RefreshToken = refreshToken
+            };
+        }
+
+        public async Task<LoginResponse> RefreshToken(string expired, string refresh)
+        {
+            var principal = jwtHandler.GetPrincipalFromExpiredToken(expired);
+            var user = await userService.GetByUsername(principal.FindFirst("username").Value);
+
+            if (user.RefreshToken == null
+                || user.RefreshToken != refresh
+                || user.RefreshTokenExpiryTime <= DateTime.Now)
+                    throw new Exception("Refresh token not valid!");
+
+            var tokenOptions = jwtHandler.GenerateTokenOptions(jwtHandler.GetSigningCredentials(), principal.Claims.ToList());
+            var newRefresh = jwtHandler.GenerateRefreshToken();
+
+            var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+            user.RefreshToken = newRefresh;
+
+            await userManager.UpdateAsync(user);
+
+            return new LoginResponse
+            {
+                Token = token,
+                RefreshToken = newRefresh
             };
         }
     }

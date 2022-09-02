@@ -1,6 +1,4 @@
-﻿using Core.Entities;
-using Core.Interfaces.Mappers;
-using Core.Interfaces.Services;
+﻿using Core.Interfaces.Services;
 using Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,5 +18,9 @@ namespace WebAPI.Controllers
         [HttpPost("login")]
         public async Task<LoginResponse> LoginAsync([FromBody] LoginViewModel credentials) =>
             await authService.Login(credentials);
+
+        [HttpPost("refresh")]
+        public async Task<LoginResponse> Refresh(TokenViewModel token) =>
+            await authService.RefreshToken(token.AccessToken, token.RefreshToken);
     }
 }

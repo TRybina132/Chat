@@ -10,5 +10,7 @@ namespace Core.Interfaces.Handlers
         SigningCredentials GetSigningCredentials();
         List<Claim> GetClaims(IdentityUser<int> user);
         JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims);
+        string GenerateRefreshToken();
+        ClaimsPrincipal GetPrincipalFromExpiredToken(string expiredToken);
     }
 }

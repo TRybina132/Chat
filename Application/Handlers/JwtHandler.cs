@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Application.Handlers
@@ -49,6 +50,40 @@ namespace Application.Handlers
             var secret = new SymmetricSecurityKey(key);
 
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
+        }
+
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string expiredToken)
+        {
+            //  ᓚᘏᗢ Getting claims from expired token
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = GetSigningCredentials().Key,
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken
+                (expiredToken, 
+                tokenValidationParameters, 
+                out SecurityToken securityToken);
+
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
+        }
+
+        public string GenerateRefreshToken()
+        {
+            //  ᓚᘏᗢ So refresh token is just random bunch of numbers
+            var randomNumber = new byte[32];
+            using(var randomNumberGenerator = RandomNumberGenerator.Create())
+            randomNumberGenerator.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
     }
 }

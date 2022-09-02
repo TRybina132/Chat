@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace Application.Services
 {
+    //  ᓚᘏᗢ Start implementing token Controller
     public class AuthService : IAuthService
     {
         private readonly IJwtHandler jwtHandler;
@@ -36,11 +37,13 @@ namespace Application.Services
             var tokenOptions = jwtHandler.GenerateTokenOptions(signingCredentials, claims);
 
             var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+            var refreshToken = jwtHandler.GenerateRefreshToken();
 
             return new LoginResponse
             {
                 IsSuccessful = true,
-                Token = token
+                Token = token,
+                RefreshToken = refreshToken
             };
         }
     }

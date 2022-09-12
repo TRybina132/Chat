@@ -1,5 +1,6 @@
 using Application.Hubs;
 using Chat.Configurations;
+using Chat.Middlewares;
 using Core.Entities;
 using DataAccess.Context;
 using Microsoft.AspNetCore.Identity;
@@ -57,6 +58,8 @@ builder.ConfigureAuthentication();
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -72,7 +75,6 @@ app.UseCors(builder.Configuration.GetSection("CORSConfig")["Name"]);
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();

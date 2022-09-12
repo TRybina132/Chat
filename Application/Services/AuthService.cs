@@ -80,7 +80,8 @@ namespace Application.Services
             return new LoginResponse
             {
                 Token = token,
-                RefreshToken = newRefresh
+                RefreshToken = newRefresh,
+                IsSuccessful = true
             };
         }
     }
